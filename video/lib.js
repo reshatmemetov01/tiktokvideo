@@ -63,7 +63,7 @@ function dayChip(txt, a = 1, col = C.yellow) {
 }
 const pop = (t, t0, d = 0.35) => t < t0 ? 0 : eb(pr(t, t0, t0 + d));
 
-// ---- персонаж Марк (низ = ступни, s = масштаб, рост ~110*s)
+// ---- персонаж Иван (низ = ступни, s = масштаб, рост ~110*s)
 function limb(x1, y1, x2, y2, w, col, bend = 0) {
   const mx = (x1 + x2) / 2 + bend, my = (y1 + y2) / 2;
   ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';

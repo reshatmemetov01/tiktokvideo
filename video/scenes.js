@@ -87,13 +87,13 @@ function scene6(t) {
   }
   // стрелки потока
   if (t < 63) { ctx.save(); ctx.globalAlpha = 0.5; EXITS.forEach(ex => { iconArrowUp(ex, 300 - ((t * 40) % 40)); }); ctx.restore(); }
-  // Марк — против потока
+  // Иван — против потока
   const mp = eio(pr(t, 59.2, 64.0)); const mx = lerp(360, 70, mp), my = lerp(505, 402, Math.min(1, mp * 2.2));
   ctx.save(); ctx.strokeStyle = C.cyan; ctx.lineWidth = 2; ctx.setLineDash([3, 4]); ctx.globalAlpha = 0.6;
   ctx.beginPath(); ctx.moveTo(360, 505); ctx.lineTo(lerp(360, 70, Math.min(mp, .45)) , lerp(505, 402, Math.min(1, mp * 2.2))); ctx.lineTo(mx, my); ctx.stroke(); ctx.restore();
   ctx.save(); neon(C.cyan, 16); ctx.fillStyle = C.cyan; ctx.beginPath(); ctx.arc(mx, my, 7, 0, 7); ctx.fill(); noGlow(); ctx.restore();
   ctx.strokeStyle = C.cyan; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(mx, my, 12 + 3 * Math.sin(t * 6), 0, 7); ctx.stroke();
-  T('МАРК', mx + (mx < 120 ? 34 : 0), my - 22, { s: 11, w: 900, c: C.cyan, ls: 1 });
+  T('ИВАН', mx + (mx < 120 ? 34 : 0), my - 22, { s: 11, w: 900, c: C.cyan, ls: 1 });
   if (t > 59.0) { const p = pop(t, 59.0, .3); chip(150, 556, 240, 38, C.cyan, 'ИДИ ПРОТИВ ПОТОКА', null, p * (1 - pr(t, 62.4, 62.7)), p, 14); }
   if (t > 64.4) { const p = pop(t, 64.46, .3); chip(150, 556, 240, 42, C.red, 'O₂ У ВЫХОДОВ: 14%', 'ДАВКА · УДУШЬЕ', p, p, 14); }
   if (t > 60.8 && t < 62.6) { const p = pop(t, 60.86, .3); chip(170, 556, 200, 38, C.orange, 'ТОЛПА: ~600 ЧЕЛ.', null, p, p, 14); }
@@ -196,7 +196,7 @@ function scene8(t) {
   ctx.restore();
   // свет под дверью и тень
   if (close > 0.9) { const sh = t > 88 ? 0.5 + 0.5 * Math.sin(t * 2.3) : 1; ctx.fillStyle = `rgba(255,60,60,${0.7 * sh})`; ctx.fillRect(dx, 468, 78, 3); if (t > 88) { ctx.fillStyle = 'rgba(0,0,0,.9)'; ctx.fillRect(dx + 20 + Math.sin(t * 1.7) * 18, 467, 22, 4); } }
-  // Марк
+  // Иван
   const go = pr(t, 82.9, 83.9); const mx = lerp(200, 420, eio(go));
   const listen = t > 86.4;
   mark(mx, 470, 1.3, { walk: go > 0 && go < 1 ? (t * 1.4) % 1 : 0, arm: go >= 1 ? (listen ? 'door' : 'door') : 'walk', t, lean: listen ? 8 : 0 });

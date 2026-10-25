@@ -199,7 +199,7 @@ function scene1(t) {
   const pulse = 0.7 + 0.3 * Math.sin(t * 4);
   neon(C.red, 16 * pulse); T('М', 462, 520, { s: 54, w: 900, c: C.red, glow: 18 }); noGlow();
   ctx.fillStyle = '#15192e'; ctx.fillRect(432, 540, 62, 20);
-  // Марк на платформе с телефоном
+  // Иван на платформе с телефоном
   const mx = 130 + pr(t, 0, 8) * 40;
   mark(mx, 600, 1.55, { arm: 'phone', t, lamp: 0 });
   glowSpot(mx + 30, 520, 60, 'rgba(255,60,80,.8)', 0.35 + 0.15 * Math.sin(t * 5));
@@ -234,7 +234,7 @@ function scene2(t) {
   const dk = (1 - L) * 0.38; ctx.fillStyle = `rgba(2,3,10,${dk})`; ctx.fillRect(0, 0, W, H);
   const sc = (wx, wy) => toScreen(cam, wx, wy);
   dayChip('ДЕНЬ 1 — 19:40', pop(t, 8.04, .3));
-  // Марк (в вагоне)
+  // Иван (в вагоне)
   // (рисуется внутри мира через mark2, ниже поверх с трансформом)
   ctx.save(); ctx.translate(270, cam.sy); ctx.scale(cam.z, cam.z); ctx.translate(-cam.x, -cam.y);
   const phoneOn = t > 15.0 ? pr(t, 15.0, 15.5) : 0;
