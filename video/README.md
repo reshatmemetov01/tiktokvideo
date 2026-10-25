@@ -11,4 +11,6 @@
 - `build.sh` — полная сборка в `out/metro72.mp4`.
 
 Ник канала: константа `CHANNEL` в `lib.js`.
-Новая озвучка: заменить `voice.mp3`, пересчитать `whisper_words.json` (faster-whisper, word_timestamps) и сдвинуть тайминги сцен.
+Новая озвучка того же текста: заменить `voice.mp3`, пересчитать `whisper_words.json` (faster-whisper, word_timestamps) и запустить `build.sh`.
+`align.py` строит `warp.json` — пословную карту «время новой озвучки → базовый таймлайн» (`captions_v1.json`),
+по ней сдвигаются анимация и звуковые эффекты.

@@ -231,7 +231,7 @@ function buildChunks() {
 }
 function captions(t) {
   const c = CHUNKS.find(c => t >= c.s - 0.03 && t < c.end); if (!c) return;
-  if (t > 90.6) return; // финал — свой заголовок
+  if (warp(t) > 90.6) return; // финал — свой заголовок
   const COL = { y: '#ffd23f', r: '#ff3b4e', b: '#55b8ff' };
   const lines = []; // до 2 строк
   ctx.font = '900 40px Inter';
@@ -251,7 +251,14 @@ function captions(t) {
 
 // ===== главный кадр
 const SCENES = [[0, 8.0, scene1], [8.0, 21.7, scene2], [21.7, 27.8, scene3], [27.8, 41.9, scene4], [41.9, 56.2, scene5], [56.2, 67.1, scene6], [67.1, 78.0, scene7], [78.0, 99, scene8]];
-function draw(t) {
+let WARP = [[0, 0], [1, 1]];
+function warp(t) { // время озвучки → базовый таймлайн анимации
+  let i = 1; while (i < WARP.length - 1 && WARP[i][0] < t) i++;
+  const [a0, b0] = WARP[i - 1], [a1, b1] = WARP[i];
+  return b0 + (b1 - b0) * (t - a0) / (a1 - a0);
+}
+function draw(tv) {
+  const t = warp(tv);
   ctx.setTransform(2, 0, 0, 2, 0, 0); ctx.globalAlpha = 1; noGlow();
   bgBase();
   const i = SCENES.findIndex(s => t >= s[0] && t < s[1]);
@@ -262,9 +269,9 @@ function draw(t) {
   const fin = cont ? 0 : 1 - pr(t, s0, s0 + 0.25), fout = i + 1 < SCENES.length && !(i === 1 || i === 2) ? pr(t, s1 - 0.2, s1) : 0;
   const k = Math.max(i > 0 ? fin : 0, fout);
   if (k > 0) { ctx.fillStyle = `rgba(0,0,0,${k})`; ctx.fillRect(0, 0, W, H); }
-  vignette(); grain(t);
-  captions(t);
+  vignette(); grain(tv);
+  captions(tv);
   T(CHANNEL, 520, 930, { s: 12, w: 800, c: 'rgba(255,255,255,.55)', a: 'right', ls: 1 });
 }
 window.draw = draw;
-window.setCaps = caps => { CAPS = caps; buildChunks(); };
+window.setCaps = (caps, w) => { CAPS = caps; buildChunks(); if (w) WARP = w; };

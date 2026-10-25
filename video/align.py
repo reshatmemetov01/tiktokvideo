@@ -41,6 +41,8 @@ for s, e, t in ww:
     if t in ("-то",) and merged:
         merged[-1] = [merged[-1][0], e, merged[-1][2] + t]
         continue
+    if not norm(t):
+        continue
     merged.append([s, e, t])
 ww = merged
 
@@ -69,5 +71,14 @@ for i, tk in enumerate(toks):
     nxt = start[i + 1] if i + 1 < len(toks) else s + 0.5
     out.append({"t": tk["t"].upper(), "c": tk["c"], "s": round(s, 2), "e": round(min(nxt, s + 0.9), 2)})
 json.dump(out, open("captions.json", "w"), ensure_ascii=False)
+# карта времени: новая озвучка → базовый таймлайн анимации (v1)
+base = json.load(open("captions_v1.json"))
+assert len(base) == len(out)
+pairs = [[0.0, 0.0]]
+for o, b in zip(out, base):
+    if o["s"] > pairs[-1][0] + 0.05 and b["s"] > pairs[-1][1] + 0.05:
+        pairs.append([o["s"], b["s"]])
+pairs.append([ww[-1][1] + 0.6, base[-1]["s"] + (ww[-1][1] + 0.6 - out[-1]["s"])])
+json.dump(pairs, open("warp.json", "w"))
 print(len(out), "слов;", sum(1 for s in start if s is not None))
 print(" ".join(f"{o['s']}:{o['t']}" for o in out[:40]))

@@ -9,6 +9,7 @@ import path from 'node:path';
 
 const dir = path.dirname(new URL(import.meta.url).pathname);
 const caps = JSON.parse(fs.readFileSync(path.join(dir, 'captions.json'), 'utf8'));
+const warpMap = JSON.parse(fs.readFileSync(path.join(dir, 'warp.json'), 'utf8'));
 const FPS = 30, DUR = Number(process.env.DUR || 95.2);
 const [, , mode = 'stills', arg = '1,10,25,33,38,45,53,60,65,70,75,85,92'] = process.argv;
 fs.mkdirSync(path.join(dir, (process.env.SD || 'out/stills')), { recursive: true });
@@ -17,7 +18,7 @@ async function page(browser) {
   const p = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
   p.on('pageerror', e => console.error('PAGE ERROR', e.message));
   await p.goto('file://' + path.join(dir, 'index.html'));
-  await p.evaluate(async c => { await document.fonts.load('900 40px Inter'); await document.fonts.load('800 13px Inter'); window.setCaps(c); }, caps);
+  await p.evaluate(async ([c, w]) => { await document.fonts.load('900 40px Inter'); await document.fonts.load('800 13px Inter'); window.setCaps(c, w); }, [caps, warpMap]);
   return p;
 }
 const frame = (p, t) => p.evaluate(t => { window.draw(t); return document.getElementById('c').toDataURL('image/jpeg', 0.93).split(',')[1]; }, t);

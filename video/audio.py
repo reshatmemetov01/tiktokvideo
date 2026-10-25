@@ -1,16 +1,20 @@
 """Синтез фоновой музыки и звуковых эффектов под таймлайн (выход: out/sfx.wav)."""
-import numpy as np, wave, os
+import numpy as np, wave, os, json
 
 SR = 44100
-DUR = 95.2
+DUR = float(os.environ.get("DUR", 95.2))
 N = int(SR * DUR)
 rs = np.random.default_rng(7)
 mix = np.zeros((N, 2), np.float32)
-T = np.arange(N) / SR
+# все времена событий ниже заданы в базовом таймлайне (v1) и переводятся под текущую озвучку
+_W = np.array(json.load(open("warp.json")))
+Tr = np.arange(N) / SR                       # реальное время
+T = np.interp(Tr, _W[:, 0], _W[:, 1])         # базовое время для огибающих
+to_new = lambda t: float(np.interp(t, _W[:, 1], _W[:, 0]))
 
 
 def add(sig, t0, gain=1.0, pan=0.0):
-    i = int(t0 * SR)
+    i = int(to_new(t0) * SR)
     if i >= N:
         return
     sig = sig[: N - i]
@@ -38,16 +42,16 @@ def hp_fast(x, cutoff):
 
 
 # --- фон: тёмный дрон (A1) + квинта, медленная модуляция
-drone = (np.sin(2 * np.pi * 55 * T) * 0.5 + np.sin(2 * np.pi * 82.4 * T + 0.3 * np.sin(2 * np.pi * 0.07 * T)) * 0.3
-         + np.sin(2 * np.pi * 110.3 * T) * 0.15) * (0.6 + 0.4 * np.sin(2 * np.pi * 0.05 * T))
+drone = (np.sin(2 * np.pi * 55 * Tr) * 0.5 + np.sin(2 * np.pi * 82.4 * Tr + 0.3 * np.sin(2 * np.pi * 0.07 * Tr)) * 0.3
+         + np.sin(2 * np.pi * 110.3 * Tr) * 0.15) * (0.6 + 0.4 * np.sin(2 * np.pi * 0.05 * Tr))
 drone *= np.clip(T / 2.0, 0, 1)
 # напряжение растёт к финалу, обрыв на вопросе
 drone *= 0.7 + 0.5 * np.clip((T - 78) / 12, 0, 1)
 drone *= np.where(T > 90.7, np.exp(-(T - 90.7) * 1.5), 1)
 add(drone.astype(np.float32), 0, 0.10)
 # пад (высокие струны-подобные)
-pad = sum(np.sin(2 * np.pi * f * T + i) for i, f in enumerate([220, 261.6, 329.6])) / 3
-pad *= 0.5 + 0.5 * np.sin(2 * np.pi * 0.11 * T)
+pad = sum(np.sin(2 * np.pi * f * Tr + i) for i, f in enumerate([220, 261.6, 329.6])) / 3
+pad *= 0.5 + 0.5 * np.sin(2 * np.pi * 0.11 * Tr)
 add((pad * np.clip(T / 4, 0, 1)).astype(np.float32), 0, 0.025)
 # гул метро до остановки поезда (8–14.9)
 rum = lp_fast(rs.standard_normal(N).astype(np.float32), 160)
