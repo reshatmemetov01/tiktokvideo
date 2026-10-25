@@ -54,6 +54,8 @@ start = [None] * len(a)
 for i, j, n in sm.get_matching_blocks():
     for k in range(n):
         start[i + k] = ww[j + k][0]
+if start[0] is None:  # первое слово — с начала речи
+    start[0] = ww[0][0]
 # заполнение пропусков по интерполяции между якорями
 anchors = [i for i, s in enumerate(start) if s is not None]
 prev = -1

@@ -251,6 +251,19 @@ function captions(t) {
 
 // ===== главный кадр
 const SCENES = [[0, 8.0, scene1], [8.0, 21.7, scene2], [21.7, 27.8, scene3], [27.8, 41.9, scene4], [41.9, 56.2, scene5], [56.2, 67.1, scene6], [67.1, 78.0, scene7], [78.0, 99, scene8]];
+// финальный титр «Следующая часть в профиле»
+function endCard(t) {
+  const p = eo(pr(t, 91.0, 91.6)); if (p <= 0) return;
+  const pulse = 0.5 + 0.5 * Math.sin(t * 5);
+  ctx.save(); ctx.globalAlpha = p; ctx.translate(0, (1 - p) * 40);
+  rr(40, 712, 460, 92, 16); ctx.fillStyle = 'rgba(6,10,20,.9)'; ctx.fill();
+  neon(C.yellow, 12 + 10 * pulse); ctx.strokeStyle = C.yellow; ctx.lineWidth = 2.5; ctx.stroke(); noGlow();
+  T('СЛЕДУЮЩАЯ ЧАСТЬ', 270, 742, { s: 26, w: 900, c: '#fff', ls: 0.5 });
+  T('В ПРОФИЛЕ  ▼', 270, 774, { s: 22, w: 900, c: C.yellow, glow: 8 + 8 * pulse, ls: 1 });
+  T(CHANNEL, 270, 826, { s: 16, w: 800, c: C.cyan, glow: 8, ls: 1 });
+  ctx.restore();
+}
+
 let WARP = [[0, 0], [1, 1]];
 function warp(t) { // время озвучки → базовый таймлайн анимации
   let i = 1; while (i < WARP.length - 1 && WARP[i][0] < t) i++;
@@ -271,6 +284,7 @@ function draw(tv) {
   if (k > 0) { ctx.fillStyle = `rgba(0,0,0,${k})`; ctx.fillRect(0, 0, W, H); }
   vignette(); grain(tv);
   captions(tv);
+  endCard(t);
   T(CHANNEL, 520, 930, { s: 12, w: 800, c: 'rgba(255,255,255,.55)', a: 'right', ls: 1 });
 }
 window.draw = draw;

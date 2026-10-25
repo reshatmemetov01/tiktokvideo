@@ -2,7 +2,7 @@
 const W = 540, H = 960;
 const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
-const CHANNEL = '@SURVIVORS';
+const CHANNEL = '@surv_laboratory';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const lerp = (a, b, t) => a + (b - a) * t;

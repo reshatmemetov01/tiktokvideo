@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 python3 -I align.py
-export DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 voice.mp3 | awk '{printf "%.2f", $1 + 0.5}')
+export DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 voice.mp3 | awk '{printf "%.2f", $1 + 2.5}')
 python3 -I audio.py
 [ "${SKIP_RENDER:-0}" = 1 ] || node render.mjs video
 ffmpeg -y -v error -i out/video_silent.mp4 -i voice.mp3 -i out/sfx.wav -filter_complex \
