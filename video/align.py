@@ -46,8 +46,9 @@ for s, e, t in ww:
     merged.append([s, e, t])
 ww = merged
 
-a = [norm(x["t"]) for x in toks]
-b = [norm(x[2]) for x in ww]
+# сравниваем по основе (первые 3 буквы), чтобы «самая/самое», «первая/первое» совпадали
+a = [norm(x["t"])[:3] for x in toks]
+b = [norm(x[2])[:3] for x in ww]
 sm = difflib.SequenceMatcher(None, a, b, autojunk=False)
 start = [None] * len(a)
 for i, j, n in sm.get_matching_blocks():
